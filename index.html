@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ecrion Runtime</title>
+    <meta name="description" content="SubvisionWeb - Ecrion runtime">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        /* --- GLOBAL --- */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url(Background.jpg) no-repeat;
+            color: #e6e6e6;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background: #0f0f0f;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #222;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            color: #00eaff;
+            text-shadow: 0 0 15px #00eaff, 0 0 30px #00eaff;
+        }
+
+        /* --- MENU --- */
+        nav a {
+            margin-left: 20px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 8px 14px;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+            nav a:hover {
+                background: #00eaff;
+                color: #000;
+                box-shadow: 0 0 10px #00eaff;
+            }
+
+        /* --- VIDEO BANNER --- */
+        .video-banner {
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+
+            .video-banner iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+
+        /* --- DOWNLOAD BOX --- */
+        .download-box {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #111;
+            border: 2px solid #00eaff;
+            border-radius: 12px;
+            box-shadow: 0 0 20px #00eaff;
+            text-align: center;
+        }
+
+            .download-box img {
+                width: 120px;
+                margin-bottom: 20px;
+            }
+
+        /* --- BUTTON NEON --- */
+        .neon-btn {
+            padding: 18px 40px;
+            font-size: 22px;
+            border: 2px solid #00eaff;
+            border-radius: 10px;
+            background: transparent;
+            color: #00eaff;
+            cursor: pointer;
+            transition: 0.3s;
+            text-shadow: 0 0 10px #00eaff;
+        }
+
+            .neon-btn:hover {
+                background: #00eaff;
+                color: #000;
+                box-shadow: 0 0 20px #00eaff, 0 0 40px #00eaff;
+                transform: scale(1.05);
+            }
+
+        /* --- SHA --- */
+        .sha {
+            margin-top: 15px;
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        /* --- MODAL --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 120px;
+            left: 120px;
+            width: 500px;
+            height: 450px;
+            background: #111;
+            border: 2px solid #00eaff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #00eaff;
+            z-index: 9999;
+        }
+
+        .modal-header {
+            background: #00eaff;
+            padding: 10px;
+            cursor: move;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .modal-content {
+            padding: 15px;
+            height: 350px;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            float: right;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* --- PRESENTATION --- */
+        .presentation {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            opacity: 0.6;
+        }
+        .hero-video {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 0 25px rgba(129,140,248,0.5);
+        }
+
+            .hero-video video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                filter: brightness(0.55) saturate(1.4);
+            }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #f1f5f9;
+            backdrop-filter: blur(2px);
+        }
+
+        .hero-overlay h2 {
+            font-size: 32px;
+            font-weight: 700;
+            text-shadow: 0 0 12px #6366f1;
+        }
+
+        .hero-overlay p {
+            margin-top: 8px;
+            font-size: 15px;
+            opacity: 0.85;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">ExilBatch</div>
+        <nav>
+            <a href="#" onclick="openModal()">Licence</a>
+            <a href="#download">Downloads</a>
+            <a href="#about">About</a>
+        </nav>
+    </header>
+
+    <!-- VIDEO BANNER -->
+    <div class="video-banner">
+        <div class="hero-video">
+            <video autoplay muted loop playsinline>
+                <source src="intro.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay">
+                <h2>Bienvenue sur Ecrion Project</h2>
+            </div>
+        </div>
+    </div>
+
+            <!-- DOWNLOAD BOX -->
+            <div class="download-box" id="download">
+                <img src="ton-logo.png" alt="Logo ExilBatch">
+                <h2>Telechargement d'ExilBatch-Ecrion</h2>
+
+                <button class="neon-btn" onclick="window.location.href='setupinstaller.zip'">
+                    Telecharger
+                </button>
+
+                <p class="sha">SHA256 : a3ec0936ec02c7d27175ce922daeb83298fac5073b7acf4d0486ec9951a6c282</p>
+            </div>
+
+            <!-- MODAL LICENCE -->
+            <div class="modal" id="modal">
+                <div class="modal-header" id="modal-header">
+                    Licence ExilBatch
+                    <span class="close-btn" onclick="closeModal()">X</span>
+                </div>
+                <div class="modal-content">
+                    <p>
+                        ECB Platform License v1.0
+
+                        Copyright (c) 2026 [Kenzo(SubvisionKenzo) / Ecrion]
+
+                        This license applies to the ECB language, ECB file format, interpreters,
+                        compilers, tools, control panel, and related documentation (the "Platform").
+
+                        Permission is granted to use, copy, modify, redistribute, and integrate the
+                        Platform into personal, educational, or commercial software, including
+                        enterprise applications, provided that proper attribution to the Author
+                        and this license is clearly included.
+
+                        The Platform may not be sold, sublicensed, or distributed as a standalone
+                        product, nor in a form substantially identical to the original Platform.
+
+                        Ownership of the original Platform and source code remains exclusively
+                        with the Author. This license does not grant any transfer of copyright,
+                        trademark, or ownership rights.
+
+                        No user or contributor may claim authorship, ownership, or exclusive rights
+                        over the original Platform, nor relicense it under a different license.
+
+                        Use of the name "ECB", "Executable Compressed Brut", or related branding
+                        requires prior written permission from the Author.
+
+                        Any use not explicitly permitted by this license requires prior authorization
+                        from the Author.
+
+                        This Platform may include third-party components distributed under their own
+                        licenses. Such components remain the property of their respective authors.
+
+                        THE PLATFORM IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+                    </p>
+                </div>
+            </div>
+
+            <!-- PRESENTATION -->
+            <div class="presentation" id="about">
+                <h2>Presentation</h2>
+                <p>
+                    - Ce logiciel et fait pour rendre le developpement plus facile et peut fonctionne
+                    sur une petit cle USB il et portable sauf pour executer des logicielles ecb.
+
+                    - Qu'es que un fichier ECB d'ou le nom Executable Compresser Brut est une archive que
+                    l'on peut executer qui permer sens ce fatiguer a faire des exe ou pour une distribution
+                    plus facile dans le quelle ils contienne plusieurs ressource plusieurs dossier contenant
+                    de sous fichier ext...
+
+                    - ExilBatch est un runtime moderne permettant d'executer des applications ECB
+                    avec extraction intelligente, terminal dedie, gestion des packages, systeme portable
+                    et bien plus encore !
+                </p>
+
+                <h3>Reseaux sociaux</h3>
+                <p>
+                    <a href="#">Discord</a> -
+                    <a href="https://www.youtube.com/@AstroGames-s1j">YouTube</a> -
+                    <a href="https://github.com/SubvisionKenzo">GitHub</a>
+                </p>
+            </div>
+
+            <footer>
+                (c) 2025 SubvisionKenzo — Tous droits reserves
+            </footer>
+
+            <script>
+                /* --- MODAL --- */
+                function openModal() {
+                    document.getElementById("modal").style.display = "block";
+                }
+                function closeModal() {
+                    document.getElementById("modal").style.display = "none";
+                }
+
+                /* --- DRAGGABLE MODAL --- */
+                const modal = document.getElementById("modal");
+                const header = document.getElementById("modal-header");
+
+                let offsetX = 0, offsetY = 0, isDown = false;
+
+                header.addEventListener("mousedown", e => {
+                    isDown = true;
+                    offsetX = modal.offsetLeft - e.clientX;
+                    offsetY = modal.offsetTop - e.clientY;
+                });
+
+                document.addEventListener("mouseup", () => isDown = false);
+
+                document.addEventListener("mousemove", e => {
+                    if (isDown) {
+                        modal.style.left = (e.clientX + offsetX) + "px";
+                        modal.style.top = (e.clientY + offsetY) + "px";
+                    }
+                });
+            </script>
+
+</body>
+</html>
