@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ExilBatch</title>
+    <meta name="description" content="ExilBatch Web" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-1: #090a12;
+            --bg-2: #120d1d;
+            --bg-3: #1d142a;
+            --panel: rgba(17, 20, 32, 0.72);
+            --panel-strong: rgba(12, 14, 23, 0.95);
+            --panel-soft: rgba(21, 25, 38, 0.7);
+            --line: rgba(255,255,255,0.09);
+            --line-strong: rgba(140, 160, 255, 0.5);
+            --text: #edf3ff;
+            --text-muted: #b7bfd8;
+            --neon: #dfe8ff;
+            --blue: #72b6ff;
+            --violet: #7c6cff;
+            --pink: #ff5fcf;
+            --red: #ff6b6b;
+            --green: #76f6c6;
+            --shadow: rgba(116, 117, 255, 0.38);
+            --hero-card: rgba(255,255,255,0.03);
+            --chip: rgba(255,255,255,0.04);
+            --input-bg: rgba(255,255,255,0.025);
+            --button-1: linear-gradient(135deg, #7d82ff 0%, #86ccff 50%, #bf6cff 100%);
+            --button-2: rgba(255,255,255,0.06);
+            --toast-bg: rgba(11, 13, 21, 0.95);
+        }
+
+        body.light-mode {
+            --bg-1: #edf2ff;
+            --bg-2: #dfe9ff;
+            --bg-3: #e8dcff;
+            --panel: rgba(255,255,255,0.68);
+            --panel-strong: rgba(247,249,255,0.94);
+            --panel-soft: rgba(255,255,255,0.7);
+            --line: rgba(80, 98, 132, 0.18);
+            --line-strong: rgba(108, 88, 255, 0.4);
+            --text: #111827;
+            --text-muted: #4f5c7b;
+            --neon: #1b2335;
+            --blue: #2f7aff;
+            --violet: #6950ff;
+            --pink: #df4dc2;
+            --red: #f04d5c;
+            --green: #1fb780;
+            --shadow: rgba(78, 97, 255, 0.18);
+            --hero-card: rgba(255,255,255,0.35);
+            --chip: rgba(17,29,49,0.04);
+            --input-bg: rgba(255,255,255,0.5);
+            --button-1: linear-gradient(135deg, #5c7cff 0%, #74d4ff 45%, #c76bff 100%);
+            --button-2: rgba(17,24,39,0.05);
+            --toast-bg: rgba(255,255,255,0.96);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Inter", sans-serif;
+            background: radial-gradient(circle at 15% 20%, rgba(122,91,255,0.28), transparent 18%), radial-gradient(circle at 78% 28%, rgba(255,95,168,0.14), transparent 22%), radial-gradient(circle at 55% 70%, rgba(65,160,255,0.12), transparent 24%), linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
+            color: var(--text);
+            overflow-x: hidden;
+            transition: background 0.35s ease, color 0.35s ease;
+        }
+
+            body::before, body::after {
+                content: "";
+                position: fixed;
+                inset: -20%;
+                pointer-events: none;
+                z-index: 0;
+                background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.04), transparent 50%);
+                animation: drift 24s linear infinite alternate;
+                filter: blur(26px);
+            }
+
+            body::after {
+                animation-duration: 30s;
+                transform: scale(1.3);
+                opacity: 0.7;
+            }
+
+        @keyframes drift {
+            0% {
+                transform: translate3d(-4%, -2%, 0) rotate(0deg);
+            }
+
+            100% {
+                transform: translate3d(4%, 4%, 0) rotate(4deg);
+            }
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            backdrop-filter: blur(16px);
+            background: rgba(11, 12, 18, 0.28);
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 28px;
+        }
+
+        body.light-mode .topbar {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .brand {
+            font-family: "Orbitron", sans-serif;
+            font-size: clamp(1.2rem, 2vw, 2rem);
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text);
+            text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 24px rgba(117, 143, 255, 0.72), 0 0 50px rgba(126, 128, 255, 0.52);
+            animation: pulseBrand 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseBrand {
+            from {
+                filter: brightness(1);
+            }
+
+            to {
+                filter: brightness(1.25);
+            }
+        }
+
+        .brand span {
+            background: linear-gradient(135deg, #d6ebff 0%, #8bc2ff 30%, #b4a7ff 52%, #f3a8ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .menu-btn {
+            position: relative;
+            width: 58px;
+            height: 58px;
+            border: 1px solid var(--line-strong);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.02);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 0 18px rgba(122, 147, 255, 0.18);
+        }
+
+            .menu-btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 0 22px rgba(122, 147, 255, 0.26);
+            }
+
+        .hamburger {
+            position: relative;
+            width: 26px;
+            height: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+            .hamburger span {
+                display: block;
+                height: 2px;
+                width: 100%;
+                border-radius: 999px;
+                background: linear-gradient(90deg, #ffffff, #9ec5ff, #d2b7ff);
+                box-shadow: 0 0 10px rgba(160,180,255,0.7);
+            }
+
+        .hero {
+            width: min(1220px, calc(100% - 32px));
+            margin: 30px auto 0;
+            display: grid;
+            grid-template-columns: 1.2fr 0.9fr;
+            gap: 28px;
+            align-items: center;
+            padding: 28px 0 40px;
+        }
+
+        .hero-copy {
+            padding: 12px 0;
+        }
+
+        h1 {
+            margin: 18px 0 18px;
+            font-family: "Orbitron", sans-serif;
+            font-size: clamp(3.1rem, 6vw, 6.4rem);
+            letter-spacing: -0.06em;
+            line-height: 0.96;
+            font-weight: 900;
+            background: linear-gradient(135deg, #d8ecff 0%, #9ad0ff 22%, #8e88ff 44%, #d5a3ff 74%, #ff8fbd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 28px rgba(117, 147, 255, 0.35));
+            animation: floatTitle 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatTitle {
+            0% {
+                transform: translateY(0px);
+            }
+
+            100% {
+                transform: translateY(-7px);
+            }
+        }
+
+        .lead {
+            max-width: 700px;
+            font-size: 1.08rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            margin: 0 0 28px;
+        }
+
+        .cta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 12px;
+        }
+
+        .btn {
+            appearance: none;
+            border: none;
+            cursor: pointer;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+            .btn:hover {
+                transform: translateY(-2px);
+            }
+
+            .btn.primary {
+                color: white;
+                background: var(--button-1);
+                box-shadow: 0 10px 28px rgba(125, 130, 255, 0.40);
+            }
+
+            .btn.secondary {
+                background: var(--button-2);
+                color: var(--text);
+                border: 1px solid var(--line);
+                backdrop-filter: blur(10px);
+            }
+
+        .hero-panel {
+            position: relative;
+            padding: 22px;
+            border-radius: 28px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
+            border: 1px solid var(--line);
+            box-shadow: 0 25px 80px rgba(15, 18, 28, 0.45);
+            min-height: 420px;
+            overflow: hidden;
+        }
+
+            .hero-panel::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(150deg, rgba(112,146,255,0.12), transparent 35%), radial-gradient(circle at 70% 20%, rgba(255, 111, 151, 0.14), transparent 28%);
+                pointer-events: none;
+            }
+
+        .glass-card {
+            position: relative;
+            z-index: 1;
+            background: var(--hero-card);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .mini-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 14px;
+        }
+
+        .mini-box {
+            border-radius: 16px;
+            padding: 18px 14px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--line);
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .label {
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .stat {
+            font-family: "Orbitron", sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.06em;
+            background: linear-gradient(135deg, #eaf2ff, #89c1ff 35%, #d4a8ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .signal {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+            .signal::before {
+                content: "";
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--green), #b5ffe0);
+                box-shadow: 0 0 12px rgba(118,246,198,0.8);
+            }
+
+        .socialbar {
+            width: min(1200px, calc(100% - 32px));
+            margin: 16px auto 38px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .social {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.02);
+            color: var(--text);
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+            .social:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 0 18px rgba(122, 147, 255, 0.2);
+            }
+
+        .system-side {
+            position: relative;
+            z-index: 2;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 18px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 18px 44px rgba(0,0,0,0.18);
+        }
+
+            .system-side h3 {
+                margin: 0 0 14px;
+                font-size: 0.76rem;
+                letter-spacing: 0.16em;
+                text-transform: uppercase;
+                color: var(--text-muted);
+            }
+
+        .system-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .system-item {
+            display: grid;
+            grid-template-columns: 56px 1fr auto;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 12px 12px;
+        }
+
+        .system-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            background: linear-gradient(135deg, rgba(120,150,255,0.28), rgba(255,120,200,0.18));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .system-icon img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+        .system-body {
+            min-width: 0;
+        }
+
+        .system-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .system-sub {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .switch {
+            position: relative;
+            width: 52px;
+            height: 30px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid var(--line);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+            .switch::after {
+                content: "";
+                position: absolute;
+                top: 3px;
+                left: 4px;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #fff, #b7cbff);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                transition: all 0.25s ease;
+            }
+
+            .switch.on {
+                background: linear-gradient(135deg, rgba(118,246,198,0.28), rgba(114,182,255,0.28));
+                border-color: rgba(118,246,198,0.5);
+            }
+
+                .switch.on::after {
+                    left: 27px;
+                    background: linear-gradient(135deg, #dffef2, #bfe4ff);
+                }
+
+        .tutorial-btn {
+            margin-top: 14px;
+            width: 100%;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--line);
+            color: var(--text);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .window-panel {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0.96);
+            width: min(920px, calc(100vw - 28px));
+            min-height: 560px;
+            border-radius: 18px;
+            border: 1px solid var(--line-strong);
+            background: rgba(12, 14, 21, 0.9);
+            box-shadow: 0 28px 80px rgba(0,0,0,0.52), 0 0 0 1px rgba(150, 170, 255, 0.15), 0 0 36px rgba(119, 127, 255, 0.18);
+            backdrop-filter: blur(18px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.22s ease, transform 0.22s ease;
+            z-index: 80;
+            overflow: hidden;
+        }
+
+        body.light-mode .window-panel {
+            background: rgba(255,255,255,0.80);
+        }
+
+        .window-panel.open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .window-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 14px 16px;
+            background: rgba(255,255,255,0.025);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .window-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .traffic {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+            .dot.red {
+                background: #ff5f57;
+            }
+
+            .dot.yellow {
+                background: #ffbd2f;
+            }
+
+            .dot.green {
+                background: #28c840;
+            }
+
+        .tablist {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--line);
+            flex: 1;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 9px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+            .tab-btn.active {
+                background: rgba(148, 170, 255, 0.10);
+                color: var(--text);
+                border: 1px solid rgba(149, 171, 255, 0.35);
+                box-shadow: inset 0 0 16px rgba(154, 167, 255, 0.08);
+            }
+
+        .close-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.02);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .window-body {
+            padding: 18px;
+            min-height: 500px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.0)), rgba(8,10,18,0.4);
+        }
+
+        body.light-mode .window-body {
+            background: linear-gradient(180deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02)), rgba(255,255,255,0.25);
+        }
+
+        .tab-panel {
+            display: none;
+            gap: 18px;
+            min-height: 440px;
+        }
+
+            .tab-panel.active {
+                display: block;
+            }
+
+        .apps-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 18px;
+            margin-top: 10px;
+        }
+
+        .app-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-height: 240px;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+            .app-card:hover {
+                transform: translateY(-2px);
+                border-color: rgba(142, 177, 255, 0.45);
+                box-shadow: 0 0 20px rgba(120, 131, 255, 0.12);
+            }
+
+        .app-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #6ca5ff, #af82ff, #ff87d8);
+            position: relative;
+            box-shadow: inset 0 1px 18px rgba(255,255,255,0.3), 0 10px 24px rgba(119,120,255,0.22);
+            margin-bottom: 4px;
+        }
+
+            .app-icon::before {
+                content: "";
+                position: absolute;
+                inset: 12px;
+                border-radius: 8px;
+                background: rgba(255,255,255,0.12);
+                border: 1px solid rgba(255,255,255,0.22);
+            }
+
+            .app-icon::after {
+                content: "";
+                position: absolute;
+                width: 18px;
+                height: 18px;
+                border-radius: 6px;
+                background: rgba(255,255,255,0.5);
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                box-shadow: 0 0 16px rgba(255,255,255,0.35);
+            }
+
+        .app-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .app-version {
+            font-size: 0.74rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .app-desc {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 0.92rem;
+            flex: 1;
+        }
+
+        .app-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 2px;
+        }
+
+        .tiny {
+            font-size: 0.74rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .download-btn {
+            appearance: none;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, rgba(124,108,255,0.18), rgba(110, 170, 255, 0.16));
+            border: 1px solid rgba(144,168,255,0.25);
+            color: var(--text);
+        }
+
+        .report-wrap {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+        }
+
+        .panel-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        .section-title {
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .subject-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            min-height: 50px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: var(--input-bg);
+            padding: 0 14px;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+            .subject-box input,
+            .report-form textarea,
+            .report-form select {
+                width: 100%;
+                border: none;
+                outline: none;
+                background: transparent;
+                color: var(--text);
+                font: inherit;
+            }
+
+                .subject-box input::placeholder,
+                .report-form textarea::placeholder {
+                    color: rgba(183,191,216,0.7);
+                }
+
+        .report-form {
+            display: grid;
+            gap: 14px;
+        }
+
+            .report-form textarea {
+                min-height: 150px;
+                resize: vertical;
+                padding: 14px 14px;
+                background: var(--input-bg);
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                line-height: 1.7;
+            }
+
+            .report-form select {
+                appearance: none;
+                min-height: 46px;
+                padding: 0 14px;
+                background: var(--input-bg);
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                color: var(--text);
+            }
+
+        .captcha-zone {
+            min-height: 72px;
+            display: grid;
+            place-items: center;
+            background: rgba(255,255,255,0.02);
+            border: 1px dashed var(--line-strong);
+            border-radius: 14px;
+        }
+
+        .send-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .save-status {
+            color: var(--text-muted);
+            font-size: 0.83rem;
+        }
+
+        .status-ok {
+            color: var(--green);
+        }
+
+        .status-error {
+            color: var(--red);
+        }
+
+        .side-launcher {
+            position: fixed;
+            right: 24px;
+            bottom: 28px;
+            z-index: 70;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 1px solid var(--line-strong);
+            background: linear-gradient(135deg, rgba(119,143,255,0.18), rgba(191,87,255,0.14));
+            backdrop-filter: blur(12px);
+            box-shadow: 0 12px 30px rgba(120,136,255,0.18);
+            color: var(--text);
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 28px;
+            transform: translateX(-50%) translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            background: var(--toast-bg);
+            color: var(--text);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+            z-index: 120;
+            min-width: 240px;
+            text-align: center;
+        }
+
+            .toast.show {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+
+        .video-modal {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.76);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+            .video-modal.show {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+        .video-box {
+            width: min(900px, 90vw);
+            aspect-ratio: 16/9;
+            background: #000;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 28px 80px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+            .video-box iframe {
+                width: 100%;
+                height: 100%;
+                border: 0;
+                display: block;
+            }
+
+        .video-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1;
+            width: 34px;
+            height: 34px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 860px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .window-panel {
+                width: min(96vw, 700px);
+            }
+
+            .tablist {
+                justify-content: flex-start;
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .topbar {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .brand {
+                letter-spacing: 0.08em;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .cta-row {
+                flex-direction: column;
+            }
+
+            .window-header {
+                flex-wrap: wrap;
+            }
+
+            .tablist {
+                width: 100%;
+            }
+
+            .send-row {
+                align-items: stretch;
+            }
+        }
+
+
+        /* Vues dédiées activées par URL : ?view=privacy, ?view=terms ou ?view=about */
+        .argument-view {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            display: none;
+            overflow-y: auto;
+            padding: clamp(12px, 3vw, 36px);
+            background: radial-gradient(circle at 15% 10%, rgba(122,91,255,0.22), transparent 30%), linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+            color: var(--text);
+        }
+        .argument-view.open { display: block; }
+        .argument-card {
+            width: min(1100px, 100%);
+            min-height: calc(100vh - clamp(24px, 6vw, 72px));
+            margin: 0 auto;
+            padding: clamp(22px, 5vw, 56px);
+            border: 1px solid var(--line-strong);
+            border-radius: 24px;
+            background: var(--panel-strong);
+            box-shadow: 0 28px 90px rgba(0,0,0,.42), 0 0 36px rgba(119,127,255,.13);
+        }
+        .argument-top { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:28px; }
+        .argument-title { margin:0; font-family:"Orbitron",sans-serif; font-size:clamp(1.5rem,4vw,2.6rem); line-height:1.2; }
+        .argument-content { max-width:850px; margin:0 auto; font-size:1rem; line-height:1.85; color:var(--text-muted); }
+        .argument-content h2 { margin-top:30px; color:var(--text); font-size:1.2rem; }
+        .argument-content a { color:var(--blue); }
+        .argument-content code { overflow-wrap:anywhere; }
+        .argument-back { border:1px solid var(--line); border-radius:10px; padding:10px 14px; color:var(--text); background:var(--button-2); cursor:pointer; font-weight:700; }
+        body.argument-mode { overflow:hidden; }
+        body.argument-mode .page, body.argument-mode #menuWindow, body.argument-mode #sideLauncher, body.argument-mode #toast, body.argument-mode #videoModal { display:none !important; }
+
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="topbar">
+            <div class="brand"><span>ExilBatch</span></div>
+            <button class="menu-btn" id="menuToggle" aria-label="Ouvrir le menu">
+                <span class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </button>
+        </header>
+
+        <main class="hero">
+            <section class="hero-copy">
+                <h1>ExilBatch</h1>
+                <p class="lead">
+                    Un logiciel pensé pour l’accessibilité et le développement !
+                    systéme supporté :
+                    Windows 10/11
+                    Windows 8.1
+                </p>
+                <div class="cta-row">
+                    <button class="btn primary" type="button" onclick="openPanel('versions')">Voir les versions</button>
+                    <button class="btn secondary" type="button" onclick="openPanel('report')">Soumettre un report</button>
+                </div>
+            </section>
+
+            <aside class="system-side">
+                <h3>Panneau de présentation</h3>
+
+                <div class="system-list">
+
+                    <div class="system-item">
+                        <div class="system-icon">
+                            <img src="assets/system-icon.png" alt="icon" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg,#6ca5ff,#7cf2ff)';">
+                        </div>
+                        <div class="system-body">
+                            <div class="system-title">Vidéo présentation d'ExilBatch</div>
+                            <div class="system-sub" style="color: grey;">Indisponnible</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="tutorial-btn" id="openVideo">Lire la vidéo</button>
+            </aside>
+        </main>
+
+        <footer class="socialbar">
+            <a class="social" href="#" aria-label="Discord">💬</a>
+            <a class="social" href="https://github.com/SubvisionKenzo" aria-label="GitHub">⌘</a>
+            <button class="social" id="themeToggle" aria-label="Basculer le thème" title="Mode clair / sombre">☼</button>
+        </footer>
+    </div>
+
+    <div id="menuWindow" class="window-panel" aria-live="polite">
+        <div class="window-header">
+            <div class="window-left">
+                <div class="traffic" aria-hidden="true">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                </div>
+            </div>
+
+            <div class="tablist" role="tablist" aria-label="Fenêtre principale">
+                <button class="tab-btn active" role="tab" aria-selected="true" data-tab="versions">Versions</button>
+                <button class="tab-btn" role="tab" aria-selected="false" data-tab="report">Report</button>
+            </div>
+
+            <button class="close-btn" id="closePanel" aria-label="Fermer">×</button>
+        </div>
+
+        <div class="window-body">
+            <div id="versionsPanel" class="tab-panel active">
+                <div class="apps-list" id="appsList"></div>
+            </div>
+
+            <div id="reportPanel" class="tab-panel">
+                <div class="report-wrap">
+                    <div class="panel-box">
+                        <span class="section-title">Subject</span>
+                        <div class="subject-box">
+                            <input id="subjectInput" type="text" placeholder="Sujet du report..." maxlength="120" />
+                        </div>
+                    </div>
+
+                    <div class="panel-box">
+                        <form class="report-form" id="reportForm">
+                            <label>
+                                <span class="section-title">Type</span>
+                                <select id="reportType">
+                                    <option value="Bug">Bug</option>
+                                    <option value="Suggestion">Suggestion</option>
+                                    <option value="Performance">Performance</option>
+                                    <option value="Security">Security</option>
+                                </select>
+                            </label>
+
+                            <label>
+                                <span class="section-title">Description</span>
+                                <textarea id="reportMessage" placeholder="Décrivez précisément le problème, l’erreur, le contexte, les étapes de reproduction, ainsi que l’impact..."></textarea>
+                            </label>
+
+                            <div class="captcha-zone">
+                                <div class="cf-turnstile"
+                                     data-sitekey=""
+                                     data-theme="dark"
+                                     data-size="normal"></div>
+                            </div>
+
+                            <div class="send-row">
+                                <div id="reportStatus" class="save-status">En attente de vérification...</div>
+                                <button class="btn primary" type="submit">Envoyer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="side-launcher" id="sideLauncher" type="button">Open Panel</button>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="video-modal" id="videoModal" aria-hidden="true">
+        <div class="video-box">
+            <button class="video-close" id="closeVideo" aria-label="Fermer la vidéo">×</button>
+            <iframe id="videoFrame"
+                    src=""
+                    title="Tutoriel ExilBatch"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+    </div>
+
+
+
+    <section id="argumentView" class="argument-view" aria-live="polite" aria-labelledby="argumentTitle">
+        <article class="argument-card">
+            <header class="argument-top">
+                <div class="brand"><span>ExilBatch</span></div>
+                <button class="argument-back" id="argumentBack" type="button">Retour au site</button>
+            </header>
+            <div class="argument-content">
+                <h1 class="argument-title" id="argumentTitle">Informations</h1>
+                <div id="argumentContent"></div>
+            </div>
+        </article>
+    </section>
+
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script>
+        window.ExilBatchSystem = {
+            enabled: {
+                performance: true,
+                security: true,
+                dashboard: true
+            },
+            tutorialVideo: "Intro.mp4"
+        };
+
+        window.ExilBatchSystem.enable = function (module) {
+            if (!this.enabled[module]) this.enabled[module] = true;
+            const el = document.querySelector('.switch[data-module="' + module + '"]');
+            if (el) {
+                el.classList.add('on');
+                el.setAttribute('aria-pressed', 'true');
+            }
+        };
+
+        window.ExilBatchSystem.disable = function (module) {
+            if (!this.enabled[module]) this.enabled[module] = false;
+            else this.enabled[module] = false;
+            const el = document.querySelector('.switch[data-module="' + module + '"]');
+            if (el) {
+                el.classList.remove('on');
+                el.setAttribute('aria-pressed', 'false');
+            }
+        };
+
+        window.ExilBatchSystem.toggle = function (module) {
+            this.enabled[module] = !this.enabled[module];
+            const el = document.querySelector('.switch[data-module="' + module + '"]');
+            if (el) {
+                el.classList.toggle('on', this.enabled[module]);
+                el.setAttribute('aria-pressed', String(this.enabled[module]));
+            }
+            return this.enabled[module];
+        };
+
+        const apps = [
+            {
+                name: "ExilBatch Launcher",
+                version: "v1.5.8",
+                desc: "Installeur binaire local et en ligne.",
+                zip: "apps/Installer.zip"
+            }
+        ];
+
+        const menuWindow = document.getElementById('menuWindow');
+        const menuToggle = document.getElementById('menuToggle');
+        const closePanel = document.getElementById('closePanel');
+        const sideLauncher = document.getElementById('sideLauncher');
+        const tabButtons = [...document.querySelectorAll('.tab-btn')];
+        const tabPanels = {
+            versions: document.getElementById('versionsPanel'),
+            report: document.getElementById('reportPanel')
+        };
+
+        function openPanel(tabName = 'versions') {
+            menuWindow.classList.add('open');
+            tabButtons.forEach(btn => {
+                const isActive = btn.dataset.tab === tabName;
+                btn.classList.toggle('active', isActive);
+                btn.setAttribute('aria-selected', String(isActive));
+            });
+
+            Object.entries(tabPanels).forEach(([key, panel]) => {
+                panel.classList.toggle('active', key === tabName);
+            });
+        }
+
+        function closePanelWindow() {
+            menuWindow.classList.remove('open');
+        }
+
+        menuToggle.addEventListener('click', () => {
+            const isOpen = menuWindow.classList.contains('open');
+            if (isOpen) closePanelWindow();
+            else openPanel('versions');
+        });
+
+        closePanel.addEventListener('click', closePanelWindow);
+        sideLauncher.addEventListener('click', () => openPanel('versions'));
+
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', () => openPanel(btn.dataset.tab));
+        });
+
+        function renderApps() {
+            const list = document.getElementById('appsList');
+            list.innerHTML = apps.map(app => `
+          <article class="app-card">
+            <div>
+              <div class="app-icon" aria-hidden="true"></div>
+              <div class="app-version">${app.version}</div>
+              <div class="app-name">${app.name}</div>
+            </div>
+
+            <div class="app-desc">${app.desc}</div>
+
+            <div class="app-actions">
+              <span class="tiny">Installer</span>
+              <button class="download-btn" type="button" data-download="${app.zip}">Télécharger</button>
+            </div>
+          </article>
+        `).join('');
+
+            document.querySelectorAll('.download-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const href = btn.dataset.download;
+                    const a = document.createElement('a');
+                    a.href = href;
+                    a.download = href.split('/').pop();
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    toast('Téléchargement démarré : ' + href.split('/').pop());
+                });
+            });
+        }
+
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            themeToggle.textContent = isLight ? '☾' : '☼';
+            toast(isLight ? 'Mode clair activé' : 'Mode sombre activé');
+        });
+
+        function toast(message) {
+            const toastEl = document.getElementById('toast');
+            toastEl.textContent = message;
+            toastEl.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => {
+                toastEl.classList.remove('show');
+            }, 2200);
+        }
+
+        document.querySelectorAll('.switch').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const module = btn.dataset.module;
+                const state = window.ExilBatchSystem.toggle(module);
+                toast(state ? module + ' activé' : module + ' désactivé');
+            });
+        });
+
+        const videoModal = document.getElementById('videoModal');
+        const videoFrame = document.getElementById('videoFrame');
+        const openVideoBtn = document.getElementById('openVideo');
+        const closeVideoBtn = document.getElementById('closeVideo');
+
+        openVideoBtn.addEventListener('click', () => {
+            videoFrame.src = window.ExilBatchSystem.tutorialVideo;
+            videoModal.classList.add('show');
+        });
+
+        closeVideoBtn.addEventListener('click', () => {
+            videoFrame.src = '';
+            videoModal.classList.remove('show');
+        });
+
+        videoModal.addEventListener('click', (event) => {
+            if (event.target === videoModal) {
+                videoFrame.src = '';
+                videoModal.classList.remove('show');
+            }
+        });
+
+        const reportForm = document.getElementById('reportForm');
+        const statusText = document.getElementById('reportStatus');
+        const subjectInput = document.getElementById('subjectInput');
+        const reportType = document.getElementById('reportType');
+        const reportMessage = document.getElementById('reportMessage');
+
+        function setStatus(message, kind = '') {
+            statusText.textContent = message;
+            statusText.classList.remove('status-ok', 'status-error');
+            if (kind) statusText.classList.add(kind);
+        }
+
+        function getTurnstileResponse() {
+            return typeof turnstile !== 'undefined' ? turnstile.getResponse() : '';
+        }
+
+        reportForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const subject = subjectInput.value.trim();
+            const type = reportType.value;
+            const message = reportMessage.value.trim();
+
+            if (!subject || !message) {
+                setStatus('Remplis le sujet et la description avant d’envoyer.', 'status-error');
+                toast('Champs manquants');
+                return;
+            }
+
+            const captchaToken = getTurnstileResponse();
+            if (!captchaToken) {
+                setStatus('Clique sur le captcha pour vérifier que tu es humain.', 'status-error');
+                toast('Captcha requis');
+                return;
+            }
+
+            setStatus('Validation du formulaire...', '');
+
+            const webhookUrl = 'https://discord.com/api/webhooks/TON_WEBHOOK_ID/TON_WEBHOOK_TOKEN';
+            const proxyUrl = 'https://your-proxy.example.com/discord';
+
+            const payload = {
+                username: 'ExilBatch Report',
+                avatar_url: '',
+                embeds: [{
+                    title: `Report — ${type}`,
+                    description: `**Sujet:** ${subject}\n\n**Message:**\n${message}`,
+                    color: 0x7B6DFF,
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            try {
+                let response;
+
+                try {
+                    response = await fetch(webhookUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                } catch (directError) {
+                    if (!proxyUrl || proxyUrl.includes('your-proxy')) {
+                        throw directError;
+                    }
+                    response = await fetch(proxyUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ webhookUrl, payload })
+                    });
+                }
+
+                if (!response.ok) {
+                    throw new Error('Webhook request failed');
+                }
+
+                setStatus('Signalement envoyé avec succès.', 'status-ok');
+                toast('Report envoyé');
+                reportForm.reset();
+                subjectInput.value = '';
+                if (typeof turnstile !== 'undefined') {
+                    turnstile.reset();
+                }
+            } catch (error) {
+                console.error(error);
+                setStatus('Erreur lors de l’envoi — vérifie ton webhook et le proxy.', 'status-error');
+                toast('Échec d’envoi');
+            }
+        });
+
+
+
+        // Affichage d'une page dédiée via un argument d'URL, par exemple ?view=privacy.
+        // Les contenus sont créés en HTML statique et aucun argument n'est injecté dans la page.
+        const argumentViews = {
+            privacy: {
+                title: 'Politique de confidentialité',
+                html: `
+                    <p><strong>Dernière mise à jour : 21 octobre 2026</strong></p>
+                    <h2>1. Généralités</h2>
+                    <p>ExilBatch est une application Windows conçue pour traiter des fichiers sur l'appareil de l'utilisateur.</p>
+                    <h2>2. Collecte et transmission des données</h2>
+                    <p>L'application principale ne transmet pas automatiquement de données personnelles en arrière-plan. Les opérations sur les fichiers sont locales, sauf si une fonctionnalité externe est explicitement utilisée.</p>
+                    <h2>3. Outil de signalement</h2>
+                    <p>Un outil de signalement distinct peut être lancé volontairement par l'utilisateur. Si l'utilisateur remplit et envoie un rapport, le contenu qu'il a saisi peut être transmis au service destinataire configuré pour recevoir ces signalements. Aucun rapport n'est envoyé automatiquement par cette action seule.</p>
+                    <h2>4. Services tiers</h2>
+                    <p>Le site peut charger des services tiers nécessaires à certaines fonctions, par exemple la vérification anti-robot Cloudflare Turnstile ou les polices Google Fonts. Ces services peuvent recevoir des informations techniques liées à la connexion, conformément à leurs propres politiques de confidentialité.</p>
+                    <h2>5. Contact</h2>
+                    <p>Pour toute question concernant cette politique, contactez l'éditeur via les coordonnées publiées sur la page officielle d'ExilBatch.</p>
+                    <p><em>Cette page doit être vérifiée et adaptée pour refléter exactement les fonctionnalités réellement distribuées.</em></p>`
+            },
+            terms: {
+                title: "Conditions d'utilisation",
+                html: `<p><strong>Dernière mise à jour : 21 octobre 2026</strong></p><h2>1. Utilisation</h2><p>ExilBatch est fourni pour être utilisé conformément aux lois applicables et aux instructions du logiciel.</p><h2>2. Responsabilité de l'utilisateur</h2><p>L'utilisateur est responsable des fichiers qu'il choisit de traiter et doit conserver des sauvegardes des données importantes.</p><h2>3. Disponibilité</h2><p>Les fonctionnalités et téléchargements peuvent évoluer. Aucune disponibilité permanente n'est garantie.</p><h2>4. Contact</h2><p>Pour toute question, utilisez les coordonnées publiées sur la page officielle d'ExilBatch.</p><p><em></em></p>`
+            },
+            about: {
+                title: 'À propos d’ExilBatch',
+                html: `<p>ExilBatch est un logiciel Windows pensé pour l'accessibilité et le développement.</p><p>Pour consulter le projet, rendez-vous sur <a href="https://github.com/SubvisionKenzo/ExilBatch" target="_blank" rel="noopener noreferrer">GitHub SubvisionKenzo</a>.</p>`
+            }
+        };
+
+        const argumentView = document.getElementById('argumentView');
+        const argumentTitle = document.getElementById('argumentTitle');
+        const argumentContent = document.getElementById('argumentContent');
+        const argumentBack = document.getElementById('argumentBack');
+        const requestedView = new URLSearchParams(window.location.search).get('view')?.toLowerCase();
+
+        function closeArgumentView() {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('view');
+            window.location.href = url.pathname + url.search + url.hash;
+        }
+
+        argumentBack.addEventListener('click', closeArgumentView);
+
+        if (requestedView && argumentViews[requestedView]) {
+            argumentTitle.textContent = argumentViews[requestedView].title;
+            argumentContent.innerHTML = argumentViews[requestedView].html;
+            argumentView.classList.add('open');
+            document.body.classList.add('argument-mode');
+            document.title = argumentViews[requestedView].title + ' — ExilBatch';
+        }
+
+
+        renderApps();
+
+        if (typeof turnstile !== 'undefined') {
+            turnstile.render('.cf-turnstile', {
+                theme: 'dark'
+            });
+        }
+    </script>
+</body>
+</html>
